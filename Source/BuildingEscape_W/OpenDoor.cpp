@@ -22,7 +22,7 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	// Find the Actor
-	AActor *Owner = GetOwner();
+	AActor* Owner = GetOwner();
 
 	// Create a rotator
 	FRotator newRotation = FRotator(0.f, 60.f, 0.f);
