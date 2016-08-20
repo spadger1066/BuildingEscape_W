@@ -21,6 +21,12 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	//UE_LOG(LogTemp, Warning, TEXT("ActorThatOpens Assigned"));
+}
+
+void UOpenDoor::OpenDoor(){
 	// Find the Actor
 	AActor* Owner = GetOwner();
 
@@ -29,15 +35,18 @@ void UOpenDoor::BeginPlay()
 
 	// Set the door Rotation
 	Owner->SetActorRotation(newRotation);
-	
 }
-
 
 // Called every frame
 void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// ...
+	// Poll the Trigger volume
+	if(PressurePlate->IsOverlappingActor(ActorThatOpens)){
+		// If the ActorThatOpens is in the volume
+		UE_LOG(LogTemp, Warning, TEXT("Call OpenDoor"));
+		OpenDoor();
+	}
 }
 
