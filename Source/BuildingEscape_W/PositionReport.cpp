@@ -22,7 +22,7 @@ void UPositionReport::BeginPlay()
 	Super::BeginPlay();
 
 	FString object = GetOwner()->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Object is %s"), *object);
+	//UE_LOG(LogTemp, Warning, TEXT("Object is %s"), *object);
 	
 }
 
