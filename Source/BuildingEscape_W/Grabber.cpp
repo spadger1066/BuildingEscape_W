@@ -53,17 +53,26 @@ void UGrabber::Grab() {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 
 	/// Try and reach any actors with body collision channel set
-	GetFirstPhysicsBodyInReach();
+	// LINE TRACE and see if we reach any actors with physics body collision channel set 
+	auto HitResult =  GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
 
 	/// If we hit something then attach a physics handle
-	// TODO attach physics handle
+	if (ActorHit) {
+		PhysicsHandle->GrabComponent(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			true	// allow rotation
+		);
+	}
 }
 
 /// Releses an object
 void UGrabber::Release() {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
-
-	// TODO release physics handle
+	PhysicsHandle->ReleaseComponent();
 }
 
 // Called every frame
@@ -71,8 +80,24 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// LINE TRACE and see if we reach any actors with physics body collision channel set 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+
+	// Get the player view point this tick
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	// Ray-cast out to reach distance
+	//FVector LineTraceEnd = PlayerViewPointLocation + FVector(0.f, 0.f, 50.f);
+	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
+
+	// If the physics component is attached
+	if (PhysicsHandle->GrabbedComponent){		
 		// move the objedt that we're holding
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
 }
 
 /// Return hit for first physics body in reach
