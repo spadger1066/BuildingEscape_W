@@ -14,7 +14,6 @@ class BUILDINGESCAPE_W_API UGrabber : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGrabber();
-
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
@@ -32,5 +31,11 @@ private:
 	// Ray-cast and grab what's in reach
 	void Grab();
 
+	// Called when Grab is Releasd
 	void Release();
+
+	void FindPhysicsHandleComponent();
+	void SetupInputComponent();
+
+	const FHitResult GetFirstPhysicsBodyInReach();
 };
