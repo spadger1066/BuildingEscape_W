@@ -33,7 +33,8 @@ private:
 
 	// Called when Grab is Releasd
 	void Release();
-
+	FVector GetReachLineStart();
+	FVector GetReachLineEnd();
 	void FindPhysicsHandleComponent();
 	void SetupInputComponent();
 
