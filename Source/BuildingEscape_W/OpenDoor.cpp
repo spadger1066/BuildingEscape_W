@@ -24,14 +24,15 @@ void UOpenDoor::BeginPlay()
 	Owner = GetOwner();
 
 	if(!PressurePlate){
-		UE_LOG(LogTemp, Warning, TEXT("%s missung pressure plate"), *GetOwner()->GetName())
+		UE_LOG(LogTemp, Error, TEXT("%s missung pressure plate"), *GetOwner()->GetName())
 	}
 
 	//UE_LOG(LogTemp, Warning, TEXT("ActorThatOpens Assigned"));
 }
 
 void UOpenDoor::OpenDoor(){
-	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	//Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
+	OnOpenRequest.Broadcast();
 }
 
 void UOpenDoor::CloseDoor() {
