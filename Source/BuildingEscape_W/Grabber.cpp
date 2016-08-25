@@ -18,7 +18,7 @@ UGrabber::UGrabber()
 void UGrabber::FindPhysicsHandleComponent(){
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (PhysicsHandle == nullptr) {
-		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle"), *GetOwner()->GetName());
+		UE_LOG(LogTemp, Error, TEXT("%s missing Physics Handle Component"), *GetOwner()->GetName());
 	}
 }
 
@@ -51,6 +51,7 @@ void UGrabber::Grab() {
 
 	/// If we hit something then attach a physics handle
 	if (ActorHit) {
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponent(
 			ComponentToGrab,
 			NAME_None,
@@ -61,7 +62,7 @@ void UGrabber::Grab() {
 }
 
 void UGrabber::Release() {
-	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -90,6 +91,7 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
+	if (!PhysicsHandle) { return; }
 	// If the physics component is attached
 	if (PhysicsHandle->GrabbedComponent){		
 		// move the objedt that we're holding
