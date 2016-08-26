@@ -26,17 +26,6 @@ void UOpenDoor::BeginPlay()
 	if(!PressurePlate){
 		UE_LOG(LogTemp, Error, TEXT("%s missung pressure plate"), *GetOwner()->GetName())
 	}
-
-	//UE_LOG(LogTemp, Warning, TEXT("ActorThatOpens Assigned"));
-}
-
-void UOpenDoor::OpenDoor(){
-	//Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
-	OnOpenRequest.Broadcast();
-}
-
-void UOpenDoor::CloseDoor() {
-	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
 
 // Called every frame
@@ -45,14 +34,10 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
 	// Poll the Trigger volume
-	if(GetTotalMassOfActorsOnPlate() > 30.f){	// TODO make into a parameter
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-	}
-
-	// Check if it's time to close the door
-	if(GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay){
-		CloseDoor();
+	if(GetTotalMassOfActorsOnPlate() >= TriggerMass){
+		OnOpen.Broadcast();
+	} else {
+		OnClose.Broadcast();
 	}
 }
 
